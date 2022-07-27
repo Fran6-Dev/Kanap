@@ -1,4 +1,4 @@
-// Recupere les données des l'API
+// Recupere les données de l'API
 
 let articleData = [];
 
@@ -30,9 +30,8 @@ const articleDisplay = async () => {
     .join("");
 };
 
-let card = document.querySelectorAll
 
 articleDisplay();
 
-// Faire un lien entre un produit de la page d'accueil et la page produit
+
 
