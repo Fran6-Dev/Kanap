@@ -14,8 +14,6 @@ const fetchProduct = async () => {
     .catch((error) => console.error("Erreur = " + error));
      }
 
-
-
 // Afficher les details produits sur la page
 
 const productDisplay = async () => {
@@ -54,34 +52,45 @@ const choixFormulaire = idForm.value;
     
     let optionsProduit = {
         nomProduit: urlData.name,
+        imgProduit: urlData.imageUrl,
         idProduit: urlData._id,
+        altProduit: urlData.altTxt,
+        descriptionProduit: urlData.description,
         colorProduit: choixFormulaire,
         quantityProduit: document.querySelector('input').value,
         priceProduit: urlData.price,
-    
     };
-    
-
-
 
     // Mise en place du localStorage
     // Verification des produits déjà present dans le local storage
     // JSON.parse, pour convertir les données du format JSON en object Javascript
     let productInCard = JSON.parse(localStorage.getItem("produit"));
     
-    // si produit deja enregistré dans le localStorage
-    if(productInCard){
+    //Ajout un produit sélectionné dans le localStorage
+
+    const ajoutProduitLocalStorage = () => {
         productInCard.push(optionsProduit);
         localStorage.setItem("produit", JSON.stringify(productInCard));
-
+        let foundProduct = productInCard.find(p => p._id == optionsProduit.idProduit);
+        if(foundProduct != undefined){
+            foundProduct.quantityProduit++;
+        }else{
+            optionsProduit.quantityProduit = 1;
+            
+        }
     }
+
+    // si produit deja enregistré dans le localStorage
+    if(productInCard){
+        ajoutProduitLocalStorage();
+    }
+
     //si le produit n'est pas enregistré dans le local storage
     else {
         productInCard = [];
-        productInCard.push(optionsProduit);
-        localStorage.setItem("produit", JSON.stringify(productInCard));
-
+        ajoutProduitLocalStorage();
     }
+    console.log(productInCard);
+
 
 });
-
