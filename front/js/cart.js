@@ -36,7 +36,7 @@ for (let k = 0 ; k < productInCard.length ; k++){
     `;
 // Affichage des éléments dans la page panier
     cardSection.innerHTML = contenuPanier;
-
+   
    
 }
 
@@ -68,5 +68,30 @@ document.getElementById('totalPrice').innerHTML = `${allPrice}`;
 document.getElementById('totalQuantity').innerHTML = `${allQuantity}`
 
 // Mise en place du button pour supprimer un article
+// La méthode Array.from() permet de créer une nouvelle instance d'Array (une copie superficielle) à partir d'un objet itérable ou semblable à un tableau.
+// array.from permet la convertion de node.list a array
+let deleteItem = Array.from(document.querySelectorAll(".deleteItem"));
+// Tableau vide ou l'on injecte le nouveau tableau une fois l'élément supprimé
+let tab = [];
 
-const deleteItem = document.querySelectorAll(".deleteItem");
+// Supprimer element
+
+for (let l = 0 ; l < deleteItem.length; l++){
+  deleteItem[l].addEventListener("click", () => {
+    deleteItem[l].parentElement.style.display = "none";
+    tab = productInCard;
+    // La methode spilce permet de retirer l'element du tableau
+    tab.splice([l], 1);
+    productInCard = localStorage.setItem('produit', JSON.stringify(tab));
+    // Permet de rafraichir la page
+    window.location.href = "cart.html";
+  });
+}
+
+// if (totalQuantity == null || totalQuantity == 0){
+//   cardSection.innerHTML = `
+//   <article>
+//     <p> Le panier est vide </p>
+//   </article>`
+
+// }

@@ -84,12 +84,11 @@ const choixFormulaire = idForm.value;
         } else {
             productInCard.push(optionsProduit);
         }
-        console.log(foundProduct);
+    
        
         
 
         localStorage.setItem("produit", JSON.stringify(productInCard));
-        console.log("TEST", productInCard.map(p => p.nomProduit));
        
     }
 
@@ -110,32 +109,3 @@ const choixFormulaire = idForm.value;
 
  });
 
-
-
-
-
-// function saveProduct(panier){
-//     localStorage.setItem("produit", JSON.stringify(productInCard));
-// }
-
-// function getProduct(){
-//     let panier = localStorage.getItem("produit");
-//     if (panier == null) {
-//         return [];
-//     } else {
-//         return JSON.parse(panier);
-//     }
-// }
-
-
-// function addPProduct(product) {
-//     let panier = getProduct();
-//     let foundProduct = panier.find(p => p._id == product._id);
-//     if (foundProduct != undefined) {
-//         foundProduct.quantityProduit++;
-//     } else {
-//         product.quantityProduit = 1;
-//         panier.push(product)
-//     }
-//     saveProduct();
-// }
