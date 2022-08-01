@@ -1,6 +1,6 @@
 // Recupere les anciennes données de la page produit
 let productInCard = JSON.parse(localStorage.getItem("produit"));
-    console.log(productInCard);
+    
   
 // Tableau vide qui va contenir toutes les futurs données du panier
 let contenuPanier = [];
@@ -9,9 +9,7 @@ const cardSection = document.getElementById('cart__items');
   
 // Itinere tous les éléments présents dans le localStorage
 for (let k = 0 ; k < productInCard.length ; k++){
-    console.log(productInCard[k].idProduit);
-    console.log(productInCard[k].nomProduit);
-    
+   
     contenuPanier = contenuPanier + 
    `
     <article class="cart__item" data-id="${productInCard[k].idProduit}" data-color="${productInCard[k].colorProduit}">
@@ -38,4 +36,37 @@ for (let k = 0 ; k < productInCard.length ; k++){
     `;
 // Affichage des éléments dans la page panier
     cardSection.innerHTML = contenuPanier;
+
+   
 }
+
+// Afficher la quantité et le prix total des articles 
+
+let totalPrice = [];
+let totalQuantity = [];
+
+// Recuperer valeurs dans le panier 
+
+for (let j = 0; j < productInCard.length; j++) {
+  let priceInCard = productInCard[j].priceProduit * productInCard[j].quantityProduit;
+  let quantityInCard = productInCard[j].quantityProduit;
+
+  // Mettre les prix et nombre d'article du panier dans une variable
+
+  totalPrice.push(priceInCard);
+  totalQuantity.push(parseInt(quantityInCard, 10));
+
+}
+
+// Additionner les prix et quantité avec la methode reduce
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+const allPrice = totalPrice.reduce(reducer);
+const allQuantity = totalQuantity.reduce(reducer);
+
+// Inserer les éléments dans le html
+document.getElementById('totalPrice').innerHTML = `${allPrice}`;
+document.getElementById('totalQuantity').innerHTML = `${allQuantity}`
+
+// Mise en place du button pour supprimer un article
+
+const deleteItem = document.querySelectorAll(".deleteItem");

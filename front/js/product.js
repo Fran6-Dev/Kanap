@@ -1,4 +1,7 @@
+
 // Faire un lien entre un produit de la page d'accueil et la page produit
+
+
 
 let params = new URL(document.location).searchParams;
 const id = params.get('id');
@@ -61,6 +64,7 @@ const choixFormulaire = idForm.value;
         priceProduit: urlData.price,
     };
 
+
     // Mise en place du localStorage
     // Verification des produits déjà present dans le local storage
     // JSON.parse, pour convertir les données du format JSON en object Javascript
@@ -69,16 +73,27 @@ const choixFormulaire = idForm.value;
     //Ajout un produit sélectionné dans le localStorage
 
     const ajoutProduitLocalStorage = () => {
-        productInCard.push(optionsProduit);
-        localStorage.setItem("produit", JSON.stringify(productInCard));
-        let foundProduct = productInCard.find(p => p._id == optionsProduit.idProduit);
-        if(foundProduct != undefined){
-            foundProduct.quantityProduit++;
-        }else{
-            optionsProduit.quantityProduit = 1;
-            
+        
+        let foundProduct = productInCard.find(p => p.idProduit == optionsProduit.idProduit);
+        if(foundProduct){
+            const index = productInCard.indexOf(foundProduct);
+
+            const product = productInCard[index];
+            const quantityValue = parseInt(product.quantityProduit, 10) + parseInt(optionsProduit.quantityProduit, 10);
+            productInCard[index].quantityProduit = quantityValue;
+        } else {
+            productInCard.push(optionsProduit);
         }
+        console.log(foundProduct);
+       
+        
+
+        localStorage.setItem("produit", JSON.stringify(productInCard));
+        console.log("TEST", productInCard.map(p => p.nomProduit));
+       
     }
+
+
 
     // si produit deja enregistré dans le localStorage
     if(productInCard){
@@ -93,4 +108,34 @@ const choixFormulaire = idForm.value;
     console.log(productInCard);
 
 
-});
+ });
+
+
+
+
+
+// function saveProduct(panier){
+//     localStorage.setItem("produit", JSON.stringify(productInCard));
+// }
+
+// function getProduct(){
+//     let panier = localStorage.getItem("produit");
+//     if (panier == null) {
+//         return [];
+//     } else {
+//         return JSON.parse(panier);
+//     }
+// }
+
+
+// function addPProduct(product) {
+//     let panier = getProduct();
+//     let foundProduct = panier.find(p => p._id == product._id);
+//     if (foundProduct != undefined) {
+//         foundProduct.quantityProduit++;
+//     } else {
+//         product.quantityProduit = 1;
+//         panier.push(product)
+//     }
+//     saveProduct();
+// }
