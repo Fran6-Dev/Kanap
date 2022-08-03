@@ -42,8 +42,8 @@ for (let k = 0 ; k < productInCard.length ; k++){
 
 // Afficher la quantité et le prix total des articles 
 
-let totalPrice = [];
-let totalQuantity = [];
+const totalPrice = [];
+const totalQuantity = [];
 
 // Recuperer valeurs dans le panier 
 
@@ -55,6 +55,7 @@ for (let j = 0; j < productInCard.length; j++) {
 
   totalPrice.push(priceInCard);
   totalQuantity.push(parseInt(quantityInCard, 10));
+  console.log(productInCard[j].priceProduit);
 
 }
 
@@ -74,7 +75,7 @@ let deleteItem = Array.from(document.querySelectorAll(".deleteItem"));
 // Tableau vide ou l'on injecte le nouveau tableau une fois l'élément supprimé
 let tab = [];
 
-// Supprimer element
+// Supprimer les articles du panier
 
 for (let l = 0 ; l < deleteItem.length; l++){
   deleteItem[l].addEventListener("click", () => {
@@ -84,7 +85,36 @@ for (let l = 0 ; l < deleteItem.length; l++){
     tab.splice([l], 1);
     productInCard = localStorage.setItem('produit', JSON.stringify(tab));
     // Permet de rafraichir la page
-    window.location.href = "cart.html";
+    window.location.reload(); 
+  });
+}
+
+
+// Changer le nombre d'article dans le panier
+
+let changeValue = document.querySelectorAll(".itemQuantity");
+
+for (let m = 0 ; m < changeValue.length; m++){
+  changeValue[m].addEventListener("change", () => {
+    const currentQuantity = document.getElementsByName("itemQuantity")[m].value;
+    const qty = currentQuantity;
+    console.log(qty);
+    console.log(totalPrice[m]);
+   
+    console.log("TEST", productInCard[m].priceProduit);
+    const productId = productInCard[m].idProduit;
+    const product = productInCard.find(dataProduct => dataProduct.idProduit === productId);
+    product.quantityProduit = qty;
+    localStorage.setItem('produit', JSON.stringify(productInCard));
+   
+    window.location.reload();   
+  
+
+    
+
+     // Permet de rafraichir la page
+    //  window.location.href = "cart.html";
+  
   });
 }
 
