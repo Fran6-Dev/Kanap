@@ -68,7 +68,7 @@ const choixFormulaire = idForm.value;
     // Mise en place du localStorage
     // Verification des produits déjà present dans le local storage
     // JSON.parse, pour convertir les données du format JSON en object Javascript
-    let productInCard = JSON.parse(localStorage.getItem("produit"));
+    let productInCard = JSON.parse(localStorage.getItem("products"));
     
     //Ajout un produit sélectionné dans le localStorage
 
@@ -88,7 +88,7 @@ const choixFormulaire = idForm.value;
        
         
 
-        localStorage.setItem("produit", JSON.stringify(productInCard));
+        localStorage.setItem("products", JSON.stringify(productInCard));
        
     }
 
