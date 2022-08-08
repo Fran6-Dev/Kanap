@@ -78,17 +78,16 @@ document.getElementById("totalQuantity").innerHTML = `${allQuantity}`;
 // array.from permet la convertion de node.list a array
 let deleteItem = Array.from(document.querySelectorAll(".deleteItem"));
 // Tableau vide ou l'on injecte le nouveau tableau une fois l'élément supprimé
-let tab = [];
+
 
 // Supprimer les articles du panier
 
 for (let l = 0; l < deleteItem.length; l++) {
   deleteItem[l].addEventListener("click", () => {
     deleteItem[l].parentElement.style.display = "none";
-    tab = productInCard;
     // La methode spilce permet de retirer l'element du tableau
-    tab.splice([l], 1);
-    productInCard = localStorage.setItem("products", JSON.stringify(tab));
+    productInCard.splice([l], 1);
+    productInCard = localStorage.setItem("products", JSON.stringify(productInCard));
     // Permet de rafraichir la page
     window.location.reload();
   });
@@ -102,10 +101,7 @@ for (let m = 0; m < changeValue.length; m++) {
   changeValue[m].addEventListener("change", () => {
     const currentQuantity = document.getElementsByName("itemQuantity")[m].value;
     const qty = currentQuantity;
-    console.log(qty);
-    console.log(totalPrice[m]);
 
-    console.log("TEST", product[m].priceProduit);
     const productId = product[m].idProduit;
     const product = product.find(
       (dataProduct) => dataProduct.idProduit === productId
@@ -134,10 +130,11 @@ btnEnvoyer.addEventListener("click", (e) => {
   e.preventDefault();
 
   //Recuperation des valeurs du formulaire
+  const productIds = productInCard.map((product) => product.idProduit);
   const contact = {
     firstName: prenom.value,
     lastName: nom.value,
-    adress: adresse.value,
+    address: adresse.value,
     city: ville.value,
     email: email.value,
   };
@@ -155,7 +152,7 @@ btnEnvoyer.addEventListener("click", (e) => {
   }
 
   // Rassemblement des valeurs du formulaire et des produits séléctionnés dans un objet à envoyer vers le serveur
-  const products = ["a6ec5b49bd164d7fbe10f37b6363f9fb"];
+  const products = productIds;
   const aEnvoyer = {
     products,
     contact,
@@ -178,6 +175,10 @@ btnEnvoyer.addEventListener("click", (e) => {
   }
   validateFirstName();
 
+  if(validateFirstName()) {
+    document.getElementById("firstNameErrorMsg").innerHTML = "";
+  };
+
   //nom
   function validateLastName() {
     const leNom = contact.lastName;
@@ -192,6 +193,10 @@ btnEnvoyer.addEventListener("click", (e) => {
     }
   }
   validateLastName();
+
+  if(validateLastName()) {
+    document.getElementById("lastNameErrorMsg").innerHTML = "";
+  }
 
   //Champ email, utilisations de REGEX
 
@@ -208,10 +213,13 @@ btnEnvoyer.addEventListener("click", (e) => {
       document.getElementById("emailErrorMsg").innerHTML =
         " Ceci n'est pas une adresse email valide.";
       return false;
-
     }
   }
   validateEmail();
+
+  if(validateEmail()) {
+    document.getElementById("emailErrorMsg").innerHTML = "";
+  };
 
   //ville
 
@@ -228,12 +236,14 @@ btnEnvoyer.addEventListener("click", (e) => {
   }
   validateCity();
 
-  console.log(products);
+  if(validateCity()) {
+    document.getElementById("cityErrorMsg").innerHTML = "";
+  };
 
   //------------------ MISE EN PLACE DE LA METHODE POST POUR ENVOYER LES ELEMENTS AU BACKEND ------------------------------
 
 
-  const test = {
+  const orderApi = {
     method: 'POST',
     body: JSON.stringify(aEnvoyer),
     headers: {
@@ -242,59 +252,17 @@ btnEnvoyer.addEventListener("click", (e) => {
   };
 
   const postApi = () => {
-    fetch('http://localhost:3000/api/products/order', test)
+    fetch('http://localhost:3000/api/products/order', orderApi)
       .then((response) => response.json())
       .then((data) => {
-        localStorage.setItem('orderId', data.orderId);
+        window.location.href = "./confirmation.html?id=" + data.orderId;
+        // localStorage.setItem('orderId', data.orderId);
       });
   };
 
- 
-
-
-  // const postApi = () => fetch("http://localhost:3000/api/products/order", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(aEnvoyer),
-  // })
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     localStorage.setItem("orderId", data.orderId);
-  //   });
-
-  // postApi();
+  postApi();
 
 });
 
-// //Prendre la key dans le localStorage et la mettre dans une variable
-// const dataLocalStorage = localStorage.getItem("formulaireValues");
-
-// // La convertir en objet javascript
-// const dataLocalStorageObject = JSON.parse(dataLocalStorage);
-
-// // Remplire le champ du formulaire par les données du local storage si elle existe
-// function remplirChampInputDepuisLocalStorage(input){
-//   document.querySelector(`#${input}`).value = dataLocalStorage[input];
-// };
-// console.log(remplirChampInputDepuisLocalStorage("lastName"));
-
-// remplirChampInputDepuisLocalStorage("lastName");
-
-/**
- *
- * Expects request to contain:
- * contact: {
- *   firstName: string,
- *   lastName: string,
- *   address: string,
- *   city: string,
- *   email: string
- * }
- * products: [string] <-- array of product _id
- *
- */
 
 
- postApi();
