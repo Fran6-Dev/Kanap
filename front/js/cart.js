@@ -1,4 +1,4 @@
-// Recupère les anciennes données de la page produit
+// Recupère les anciennes données de la page produit du localStorage et la transforme en objet JavaScript
 let productInCart = JSON.parse(localStorage.getItem("products"));
 
 // Tableau vide qui va contenir toutes les futurs données du panier
@@ -6,7 +6,7 @@ let contenuPanier = [];
 // Seclection l'attribut ou l'on souhaite rajouter le contenu HTML
 const cardSection = document.getElementById("cart__items");
 
-// Itinere tous les éléments présents dans le localStorage
+// Parcours tous les éléments existant dans le localStorage
 for (let k = 0; k < productInCart.length; k++) {
   contenuPanier =
     contenuPanier +
@@ -47,10 +47,8 @@ for (let k = 0; k < productInCart.length; k++) {
 }
 
 // Ajoute les éléments séléctionnés par l'utilisateur dans le panier
-
 function addProductToCart() {
-  // Afficher la quantité et le prix total des articles
-
+  // Afficher la quantité et le prix total des articles que l'on va stocker dans des tableaux
   const totalPrice = [];
   const totalQuantity = [];
 
@@ -61,8 +59,7 @@ function addProductToCart() {
       productInCart[j].priceProduit * productInCart[j].quantityProduit;
     let quantityInCart = productInCart[j].quantityProduit;
 
-    // Mettre les prix et nombre d'article du panier dans une variable
-
+    // Pousser les prix et nombre d'article du panier dans les variable créée précedemment
     totalPrice.push(priceInCart);
     totalQuantity.push(parseInt(quantityInCart, 10));
   }
@@ -80,19 +77,14 @@ function addProductToCart() {
 addProductToCart();
 
 // Mise en place du button pour supprimer un article
-
 function deleteProduct() {
   // La méthode Array.from() permet de créer une nouvelle instance d'Array (une copie superficielle) à partir d'un objet itérable ou semblable à un tableau.
-  // array.from permet la convertion de node.list a array
   let deleteItem = Array.from(document.querySelectorAll(".deleteItem"));
-  // Tableau vide ou l'on injecte le nouveau tableau une fois l'élément supprimé
-
   // Supprimer les articles du panier
-
   for (let l = 0; l < deleteItem.length; l++) {
     deleteItem[l].addEventListener("click", () => {
       deleteItem[l].parentElement.style.display = "none";
-      // La methode spilce permet de retirer l'element du tableau
+      // La méthode splice() modifie le contenu d'un tableau en retirant des éléments et/ou en ajoutant de nouveaux éléments à même le tableau.
       productInCart.splice([l], 1);
       productInCart = localStorage.setItem(
         "products",
@@ -103,7 +95,6 @@ function deleteProduct() {
     });
   }
 }
-
 deleteProduct();
 
 // Changer le nombre d'article dans le panier
@@ -111,17 +102,17 @@ function changeItemNumber() {
   let changeValue = document.querySelectorAll(".itemQuantity");
 
   for (let m = 0; m < changeValue.length; m++) {
+    // L'événement change est déclenché pour les éléments <input> lorsqu'un changement de leur valeur est réalisé par l'utilisateur.
     changeValue[m].addEventListener("change", (e) => {
       e.preventDefault();
-
-      const currentQuantity =
-        document.getElementsByName("itemQuantity")[m].value;
+      // Permet de séléctionné la valeur inscrit dans l'input et de lui attribuer une variable ici qty.
+      const currentQuantity = document.getElementsByName("itemQuantity")[m].value;
       let qty = currentQuantity;
-
+      // La méthode find() renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition donnée par la fonction de test passée en argument.
       let product = productInCart.find(
         (dataProduct) => dataProduct.idProduit === productInCart[m].idProduit
       );
-
+      // Ici, la quantité inscrite dans l'input et égale a celle trouver dans productInCart grâce à l'id
       product.quantityProduit = qty;
       localStorage.setItem("products", JSON.stringify(productInCart));
 
@@ -150,6 +141,7 @@ function postForm() {
     e.preventDefault();
   
     // Recuperation des valeurs du formulaire
+    // Recupère les id des produits
     const productIds = productInCart.map((product) => product.idProduit);
     const contact = {
       firstName: firstName.value,
@@ -158,31 +150,13 @@ function postForm() {
       city: city.value,
       email: email.value,
     };
-  
-    if (
-      validateFirstName() &&
-      validateLastName() &&
-      validateEmail() &&
-      validateCity()
-    ) {
-      // Mettre l'objet formulaire dans le local storage
-      localStorage.setItem("contact", JSON.stringify(contact));
-    } else {
-      alert("Veuillez bien remplir le formulaire");
-    }
-  
-    // Rassemblement des valeurs du formulaire et des produits séléctionnés dans un objet à envoyer vers le serveur
-    const products = productIds;
-    const ToSend = {
-      products,
-      contact,
-    };
-  
+
     // UTILISATION DE REGEX POUR LES DIFFÉRENTS CHAMPS DU FORMULAIRE
   
     // Champ prénom du formulaire
   
     function validateFirstName() {
+      //Correspond à la valeur inscrit dans firstname dans le formulaire
       const lePrenom = contact.firstName;
       if (/^[A-Z][a-z '-.,]{2,31}$|^$i/.test(lePrenom)) {
         return true;
@@ -194,7 +168,7 @@ function postForm() {
       }
     }
     validateFirstName();
-  
+    // Réinitialise le message d'erreur après la correction de celui ci
     if (validateFirstName()) {
       document.getElementById("firstNameErrorMsg").innerHTML = "";
     }
@@ -255,10 +229,31 @@ function postForm() {
     if (validateCity()) {
       document.getElementById("cityErrorMsg").innerHTML = "";
     }
+
+    // Condition de validation du formulaire
+  
+    if (
+      validateFirstName() &&
+      validateLastName() &&
+      validateEmail() &&
+      validateCity()
+    ) {
+      // Mettre l'objet formulaire dans le local storage
+      localStorage.setItem("contact", JSON.stringify(contact));
+    } else {
+      alert("Veuillez bien remplir le formulaire");
+    };
   
     //------------------ FIN DE GESTION DU FORMULAIRE ------------------------------
   
     //------------------ MISE EN PLACE DE LA METHODE POST POUR ENVOYER LES ELEMENTS AU BACKEND ------------------------------
+
+    // Rassemblement des valeurs du formulaire et des produits séléctionnés dans un objet à envoyer vers le serveur
+    const products = productIds;
+    const ToSend = {
+      products,
+      contact,
+    };
   
     const orderApi = {
       method: "POST",
