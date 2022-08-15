@@ -1,4 +1,4 @@
-// Recupère les données de l'API
+//--------------- RÉCUPERATION DES DONNÉES DE L'API --------------------------
 let articleData = [] ;
 
 const fetchArticle = async () => {

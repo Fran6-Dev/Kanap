@@ -11,7 +11,7 @@ const fetchProduct = async () => {
   await fetch(`http://localhost:3000/api/products/${id}`)
     .then((res) => res.json())
     .then((promise) => {
-      // Ici on transfère le retour de l'API vers le tableau urlData
+      // Ici on transfère la promesse le tableau urlData
       urlData = promise;
     })
     .catch((error) => console.error("Erreur = " + error));
